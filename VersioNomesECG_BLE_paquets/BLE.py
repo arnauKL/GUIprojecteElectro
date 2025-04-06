@@ -5,7 +5,7 @@ from bleak import BleakClient, BleakError
 from config import ADDRESS, CHARACTERISTIC_UUID
 
 class BLEThread(QThread):
-    new_data = Signal(float)
+    new_data = Signal(tuple)
     connected = Signal()
     error = Signal(str)
 
@@ -28,8 +28,18 @@ class BLEThread(QThread):
             self.error.emit(str(e))
 
     def notification_handler(self, sender, data):
-        [value] = struct.unpack('f', data)
-        self.new_data.emit(value) # 'envia' la dada a Qt perquè la mostri
+
+        # Si les dades són exactament 80 bytes (20 floats)
+        if len(data) == 80:
+            # Desempaqueta les dades (20 floats)
+            values = struct.unpack('20f', data)
+            self.new_data.emit(values) # 'envia' la dada a Qt perquè la mostri
+        else:
+            # Si la mida no és la correcta, pots gestionar-ho d'una altra manera
+            print(f"Error: la mida del buffer no és la correcta. Mida rebuda: {len(data)}")
+        
+        #values = struct.unpack('20f', data) # 20 floats rebuts en teoria
+        #self.new_data.emit(values) # 'envia' la dada a Qt perquè la mostri
 
     def stop(self):
         self._running = False

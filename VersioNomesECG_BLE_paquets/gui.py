@@ -2,6 +2,8 @@ from PySide6 import QtCore, QtWidgets
 from canvas import MplCanvas
 from BLE import BLEThread
 from config import N_DADES
+from collections import deque
+
 
 class MainWindow(QtWidgets.QMainWindow):
 # Classe que guarda la finestra
@@ -14,7 +16,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Dades (faltarà posar les de respiració i activació de simpàtic/parasimpàtic)
         self.xdata = list(range(N_DADES))
-        self.ydata = [0] * N_DADES
+        self.ydata = deque([0.0]*N_DADES, maxlen=N_DADES)
+
         self._plot_ref = None
         self.latest_value = 0.0
         self.ble_thread = None
@@ -63,10 +66,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ble_thread.error.connect(self.on_error)
         self.ble_thread.start()
 
-    def receive_data(self, value):
-        self.latest_value = value
-        self.label_dada.setText(f"Última dada: {value:.2f}")
-        self.ydata = self.ydata[1:] + [value]
+    def receive_data(self, values):
+        self.ydata.extend(values)   # Com tenim la màxima mida posada, això ho farà sol
+        #self.label_dada.setText(f"Última dada: {value:.2f}")
 
     def on_connected(self):
         self.label_connexio.setText("Connexió: Connectat")
