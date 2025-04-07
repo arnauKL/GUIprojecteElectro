@@ -1,7 +1,7 @@
 from PySide6 import QtCore, QtWidgets
 from canvas import MplCanvas
 from BLE import BLEThread
-from config import N_DADES
+from config import N_DADES_PLT, N_MOSTRES_ECG_REBUDES, N_MOSTRES_RES_REBUDES
 from collections import deque
 
 
@@ -12,11 +12,12 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # UI de matplotlib (per ara només 1 per l'ECG)
-        self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.canvas_ecg = MplCanvas(self, width=5, height=4, dpi=100)
 
         # Dades (faltarà posar les de respiració i activació de simpàtic/parasimpàtic)
-        self.xdata = list(range(N_DADES))
-        self.ydata = deque([0.0]*N_DADES, maxlen=N_DADES)
+        self.xdata = list(range(N_DADES_PLT))
+        self.ydata_ecg = deque([0.0]*N_DADES_PLT, maxlen=N_DADES_PLT)
+        self.ydata_res = deque([0.0]*N_DADES_PLT, maxlen=N_DADES_PLT)
 
         self._plot_ref = None
         self.latest_value = 0.0
@@ -33,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Layout per mostrar-ho tot. Per ara tot es mostra verticalment, un element sota l'anterior
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.canvas)
+        layout.addWidget(self.canvas_ecg)
         layout.addWidget(self.label_dada)
         layout.addWidget(self.label_connexio)
         layout.addWidget(self.boto_connectar)
@@ -67,8 +68,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ble_thread.start()
 
     def receive_data(self, values):
-        self.ydata.extend(values)   # Com tenim la màxima mida posada, això ho farà sol
-        #self.label_dada.setText(f"Última dada: {value:.2f}")
+        # Aquí s'haurien de parsejar les dades que arriben de Signal
+        self.ydata_ecg.extend(values)
 
     def on_connected(self):
         self.label_connexio.setText("Connexió: Connectat")
@@ -81,12 +82,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_plot(self):
         if self._plot_ref is None:
-            plot_refs = self.canvas.axes.plot(self.xdata, self.ydata, 'r')
+            plot_refs = self.canvas_ecg.axes.plot(self.xdata, self.ydata_ecg, 'r')
             self._plot_ref = plot_refs[0]
         else:
-            self._plot_ref.set_ydata(self.ydata)
-        self.canvas.axes.set_ylim(-1, 1.5)
-        self.canvas.draw()
+            self._plot_ref.set_ydata(self.ydata_ecg)
+        self.canvas_ecg.axes.set_ylim(-1, 1.5)
+        self.canvas_ecg.draw()
 
     def closeEvent(self, event):
         if self.ble_thread:
