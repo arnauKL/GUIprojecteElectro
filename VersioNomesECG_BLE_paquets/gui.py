@@ -121,10 +121,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas_res.draw()
 
         # Ara els 3 valors calculats:
-        if self.stress_value != 0:
-            self.label_dades.setText(f"Dades del pacient.\nSNS: {self.SNS_value}\tPNS: {self.PNS_value}\tStress: {self.stress_value}")
-            self.canvas_barplot.draw()
-            self.canvas_barplot.axes.set_ylim(0, 100)
+        #if self.stress_value != 0:
+        self.label_dades.setText(f"Dades del pacient.\nSNS:\t{self.SNS_value}\nPNS:\t{self.PNS_value}\nEstrés:\t{self.stress_value}")
+        self.canvas_barplot.axes.bar(['SNS', 'PNS'], [self.SNS_value, self.PNS_value], color=['tab:red', 'tab:blue'])
+        self.canvas_barplot.axes.set_ylim(0, 100)
+        self.canvas_barplot.draw()
 
 
     def closeEvent(self, event):
