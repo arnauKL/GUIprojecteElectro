@@ -2,7 +2,7 @@ import struct
 import asyncio
 from PySide6.QtCore import QThread, Signal
 from bleak import BleakClient, BleakError
-from config import ADDRESS, CHARACTERISTIC_UUID, N_MOSTRES_ECG_REBUDES
+from config import ADDRESS, CHARACTERISTIC_UUID, N_FLOATS_REBUTS
 
 class BLEThread(QThread):
     new_data = Signal(tuple)
@@ -29,7 +29,7 @@ class BLEThread(QThread):
 
     def notification_handler(self, sender, data):
         # Desempaqueta les dades (N floats)
-        values = struct.unpack(f'{N_MOSTRES_ECG_REBUDES}f', data)
+        values = struct.unpack(f'{N_FLOATS_REBUTS}f', data)
         self.new_data.emit(values) # 'envia' les dades a Qt perquè la mostri
 
     def stop(self):
