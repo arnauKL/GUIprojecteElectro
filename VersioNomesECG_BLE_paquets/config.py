@@ -5,9 +5,12 @@ ADDRESS = "D8:13:2A:73:1C:8A"       # ESP ARNAU
 N_DADES_PLT = 1000
 
 # Això hem de procurar que es mantengui a la par amb s codi de l'ESP
-N_MOSTRES_ECG_REBUDES = 30
-N_MOSTRES_RES_REBUDES = 30
+N_MOSTRES_ECG = 30
+N_MOSTRES_RES = 30
+
+import numpy as np
+
+MIDA_FLOATS = 4
 
 # Càlcul de dades totals rebudes
-MIDA_FLOAT_BYTES = 4
-N_FLOATS_REBUTS = (N_MOSTRES_ECG_REBUDES + N_MOSTRES_RES_REBUDES + 3) # 3 floats per: SNS, PNS i estrés
+N_FLOATS_REBUTS = (N_MOSTRES_ECG + N_MOSTRES_RES + 3) # 3 floats per: SNS, PNS i estrés

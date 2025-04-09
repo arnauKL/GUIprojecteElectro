@@ -1,7 +1,7 @@
 from PySide6 import QtCore, QtWidgets
 from canvas import MplCanvas
 from BLE import BLEThread
-from config import N_DADES_PLT, N_MOSTRES_ECG_REBUDES, N_MOSTRES_RES_REBUDES
+from config import N_DADES_PLT, N_MOSTRES_ECG, N_MOSTRES_RES
 from collections import deque
 
 
@@ -19,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Dades (faltarà posar les de respiració i activació de simpàtic/parasimpàtic)
         self.xdata = list(range(N_DADES_PLT))
         self.ydata_ecg = deque([0.0]*N_DADES_PLT, maxlen=N_DADES_PLT)
-        self.ydata_res = deque([0.0]*N_DADES_PLT, maxlen=N_DADES_PLT)
+        self.ydata_res = deque([3.0]*N_DADES_PLT, maxlen=N_DADES_PLT)
 
         self._plot_ecg_ref = None
         self._plot_res_ref = None
@@ -82,13 +82,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def receive_data(self, values):
         # Aquí s'haurien de parsejar les dades que arriben de Signal
-        self.ydata_ecg.extend(values[0:N_MOSTRES_ECG_REBUDES])           # dades de 0 fins N_MOSTRES_ECG_REBUDES són d'ECG
-        self.ydata_res.extend(values[N_MOSTRES_ECG_REBUDES:N_MOSTRES_RES_REBUDES+N_MOSTRES_ECG_REBUDES])         # dades de N_MOSTRES_ECG_REBUDES fins N_MOSTRES_RES_REBUDES són de respiració
+        self.ydata_ecg.extend(values[0:N_MOSTRES_ECG])           # dades de 0 fins N_MOSTRES_ECG_REBUDES són d'ECG
+        self.ydata_res.extend(values[N_MOSTRES_ECG:(N_MOSTRES_RES+N_MOSTRES_ECG)])         # dades de N_MOSTRES_ECG_REBUDES fins N_MOSTRES_RES_REBUDES són de respiració
         
         # Darrers 3 valors: sns, pns i estrés
-        self.SNS_value = values[N_MOSTRES_RES_REBUDES+N_MOSTRES_ECG_REBUDES]
-        self.PNS_value = values[N_MOSTRES_RES_REBUDES+N_MOSTRES_ECG_REBUDES+1]
-        self.stress_value = values[N_MOSTRES_RES_REBUDES+N_MOSTRES_ECG_REBUDES+2]
+        self.SNS_value = values[N_MOSTRES_RES+N_MOSTRES_ECG]
+        self.PNS_value = values[N_MOSTRES_RES+N_MOSTRES_ECG+1]
+        self.stress_value = values[N_MOSTRES_RES+N_MOSTRES_ECG+2]
 
     def on_connected(self):
         self.label_connexio.setText("Connexió: Connectat")
@@ -115,9 +115,9 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_refs = self.canvas_res.axes.plot(self.xdata, self.ydata_res, 'g')
             self._plot_res_ref = plot_refs[0]
         else:
-            self._plot_res_ref.set_ydata(self.ydata_ecg)
+            self._plot_res_ref.set_ydata(self.ydata_res)
 
-        self.canvas_res.axes.set_ylim(-10, 10)
+        self.canvas_res.axes.set_ylim(2, 4)
         self.canvas_res.draw()
 
         # Ara els 3 valors calculats:

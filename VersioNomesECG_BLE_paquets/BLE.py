@@ -2,7 +2,7 @@ import struct
 import asyncio
 from PySide6.QtCore import QThread, Signal
 from bleak import BleakClient, BleakError
-from config import ADDRESS, CHARACTERISTIC_UUID, N_FLOATS_REBUTS
+from config import ADDRESS, CHARACTERISTIC_UUID, N_FLOATS_REBUTS, MIDA_FLOATS
 
 class BLEThread(QThread):
     new_data = Signal(tuple)
@@ -29,8 +29,11 @@ class BLEThread(QThread):
 
     def notification_handler(self, sender, data):
         # Desempaqueta les dades (N floats)
-        values = struct.unpack(f'{N_FLOATS_REBUTS}f', data)
-        self.new_data.emit(values) # 'envia' les dades a Qt perquè la mostri
+        if (len(data) == N_FLOATS_REBUTS*MIDA_FLOATS):
+            values = struct.unpack(f'{N_FLOATS_REBUTS}f', data)
+            self.new_data.emit(values) # 'envia' les dades a Qt perquè la mostri
+        else:
+            print(f"Nombre de dades inesperat rebudes per BLE: {len(data)}. S'esperen {N_FLOATS_REBUTS*MIDA_FLOATS}")
 
     def stop(self):
         self._running = False
