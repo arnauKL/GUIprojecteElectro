@@ -124,7 +124,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #if self.stress_value != 0:
         self.label_dades.setText(f"Dades del pacient.\nSNS:\t{self.SNS_value}\nPNS:\t{self.PNS_value}\nEstrés:\t{self.stress_value}")
         self.canvas_barplot.axes.bar(['SNS', 'PNS'], [self.SNS_value, self.PNS_value], color=['tab:red', 'tab:blue'])
-        self.canvas_barplot.axes.set_ylim(0, 100)
+        #self.canvas_barplot.axes.set_ylim(0, 100)
         self.canvas_barplot.draw()
 
 
