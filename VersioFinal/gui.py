@@ -136,11 +136,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self._bar_refs[1].set_height(self.PNS_value)
         self.canvas_barplot.draw()
 
-
         # Ara els 3 valors calculats:
         #if self.stress_value != 0:
         self.label_dades.setText(f"Dades del pacient.\nSNS:\t{self.SNS_value}\nPNS:\t{self.PNS_value}\nEstrés:\t{self.stress_value}")
-        
         
         self.dirty = False
 
