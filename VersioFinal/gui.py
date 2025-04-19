@@ -4,7 +4,6 @@ from BLE import BLEThread
 from config import N_DADES_PLT, N_MOSTRES_ECG, N_MOSTRES_RES, DELAY_FRAMES
 from collections import deque
 
-
 class MainWindow(QtWidgets.QMainWindow):
 # Classe que guarda la finestra
 
@@ -33,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ble_thread = None
 
         # Etiquetes amb informació (faltarà posar nivell de stress)
-        self.label_dades = QtWidgets.QLabel(f"Dades del pacient.\nSNS:\t--\nPNS:\t--\nEstrés:\t--")
+        self.label_dades = QtWidgets.QLabel("Dades del pacient.\nSNS:\t--\nPNS:\t--\nEstrés:\t--")
         self.label_connexio = QtWidgets.QLabel("Connexió: --")
         self.boto_connectar = QtWidgets.QPushButton("Connectar")
 
