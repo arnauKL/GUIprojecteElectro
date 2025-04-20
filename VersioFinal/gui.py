@@ -8,7 +8,7 @@ class MainWindow(QtWidgets.QMainWindow):
 # Classe que guarda la finestra
 
     def __init__(self):
-        super().__init__()
+        super().__init__()  # Ctor x defecte de QMainWindow
 
         # UI de matplotlib (per ara només 1 per l'ECG)
         self.canvas_ecg = MplCanvas(self, width=5, height=4, dpi=100)
@@ -84,7 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ble_thread.start()
 
     def receive_data(self, values):
-        # Aquí s'haurien de parsejar les dades que arriben de Signal
+        # Parsejar les dades que arriben de Signal
         self.ydata_ecg.extend(values[0:N_MOSTRES_ECG])           # dades de 0 fins N_MOSTRES_ECG_REBUDES són d'ECG
         self.ydata_res.extend(values[N_MOSTRES_ECG:(N_MOSTRES_RES+N_MOSTRES_ECG)])         # dades de N_MOSTRES_ECG_REBUDES fins N_MOSTRES_RES_REBUDES són de respiració
         
