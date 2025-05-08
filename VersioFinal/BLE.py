@@ -20,12 +20,11 @@ class BLEThread(QThread):
         try:
             async with BleakClient(ADDRESS) as client:
                 await client.start_notify(CHARACTERISTIC_UUID, self.notification_handler)
-                self.connected.emit()
-
+                self.connected.emit()  # Informa a la GUI general de que hi ha hagut una connexió
                 while self._running:
                     await asyncio.sleep(0.1)
         except BleakError as e:
-            self.error.emit(str(e))
+            self.error.emit(str(e)) # informa a la gui general
 
     def notification_handler(self, sender, data):
         # Desempaqueta les dades (N floats)
