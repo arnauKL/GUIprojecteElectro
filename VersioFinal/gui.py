@@ -95,6 +95,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.dirty = True   # Per fer q es re-dibuixin els plots
 
+
+        #print(f"ECG: {values[19]}")
+        #print(f"RES: {values[39]}")
+        #print(values[40])
+        #print(values[41])
+        #print(values[42])
+
     def on_connected(self):
         self.label_connexio.setText("Connexió: Connectat")
         self.label_connexio.setStyleSheet("font-size: 14px; color: green")
