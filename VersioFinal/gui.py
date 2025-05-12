@@ -116,7 +116,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:                           # En cas contrari, actualitzem les dades
             self._plot_ecg_ref.set_ydata(self.ydata_ecg)
         
-        #self.canvas_ecg.axes.set_ylim(-1, 1.5)
+        self.canvas_ecg.axes.autoscale(enable=True, axis='y')
         self.canvas_ecg.draw()
 
         # Ara pel plot de la respiració
@@ -125,8 +125,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self._plot_res_ref = plot_refs[0]
         else:
             self._plot_res_ref.set_ydata(self.ydata_res)
-
-        #self.canvas_res.axes.set_ylim(2, 4)
+        self.canvas_res.axes.autoscale(enable=True, axis='y')
         self.canvas_res.draw()
 
 

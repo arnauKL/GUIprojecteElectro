@@ -22,7 +22,7 @@ class BLEThread(QThread):
                 await client.start_notify(CHARACTERISTIC_UUID, self.notification_handler)
                 self.connected.emit()  # Informa a la GUI general de que hi ha hagut una connexió
                 while self._running:
-                    await asyncio.sleep(0.1)
+                    await asyncio.sleep(10)
         except BleakError as e:
             self.error.emit(str(e)) # informa a la gui general
 
